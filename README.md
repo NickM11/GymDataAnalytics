@@ -21,8 +21,14 @@ import missingno as msno
 Pandas is used for data manipulation and to read our csv files.
 
 Seaborn is used with matplotlib to display our data.
-
-// Edit in near future
+## Defining dataframes
+Dataframes are defined from four csv that we read with pandas.
+```bash
+df_checkin = pd.read_csv('checkin_checkout_history_updated.csv')
+df_gym = pd.read_csv('gym_locations_data.csv')
+df_sub = pd.read_csv('subscription_plans.csv')
+df_user = pd.read_csv('users_data.csv')
+```
 ## Data cleaning
 This part describes the process of data cleaning in this project.
 ### Getting list of unique facilities
@@ -58,5 +64,30 @@ new_cols = {'Basketball':'basketball_court',
 }
 df = df.rename(new_cols,axis=1)
 ```
+### Joining all of the data
+Here I join all four csv tables together for easier workflow.
+To create main dataframe df we start by merging df_user with df_sub by their joint column 'subscription_plan'.
+Similar for df_checkin we merge with previous merge by joint 'user_id'.Guess what? We do it again but with df_gym by their joint 'gym_id'.
+
+```python
+df = pd.merge(pd.merge(df_checkin,pd.merge(df_user,df_sub,on=['subscription_plan']),on=['user_id']),df_gym,on=['gym_id'])
+```
+### Datetime conversion and new colums for future analysis
+I converted all datetime columns to have the same standart to exclude any future problems.
+It all was done with pandas to_datetime() function.
+```python
+df['checkin_time'] = pd.to_datetime(df['checkin_time'])
+df['checkout_time'] = pd.to_datetime(df['checkout_time'])
+df['sign_up_date'] = pd.to_datetime(df['sign_up_date'])
+```
+To analyze data more efficient new columns are created.For these columns we calculate time spent in minutes.Then we took hour,day,month from checkin_time column.For it I used number of dt functions such as hour,day_name(),month_name()
+```python
+df['time_spent_min']=((df['checkout_time']-df['checkin_time']).dt.total_seconds()/60).astype(int)
+df['hour_of_day']=df['checkin_time'].dt.hour
+df['day_of_week']=df['checkin_time'].dt.day_name()
+df['month_of_year']=df['checkin_time'].dt.month_name()
+```
+
+
 
 
