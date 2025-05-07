@@ -28,6 +28,7 @@ This part describes the process of data cleaning in this project.
 ### Getting list of unique facilities
 There were unnecessery values I wanted to remove.There were duplicates and some of them anyway should have been edited in future for consistency reasons.
 ```bash
+flist = sorted(set(df_gym['facilities'].str.split().explode().str.strip()))
 
 flist.remove('Classes')
 flist.remove('Classes,')
