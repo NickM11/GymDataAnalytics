@@ -87,6 +87,39 @@ df['hour_of_day']=df['checkin_time'].dt.hour
 df['day_of_week']=df['checkin_time'].dt.day_name()
 df['month_of_year']=df['checkin_time'].dt.month_name()
 ```
+### Remowing unnecessary columns
+After all operations we remove columns that will not have any use of them in future analysis.
+```python\
+df = df.drop(['user_id','gym_id','checkout_time','first_name','last_name','gender','birthdate','features','facilities','location'],axis=1)
+```
+### Creating column for conditional age group
+```python
+conditions=[
+    (df['age']<25),
+    (df['age']>=25) & (df['age']<35),
+    (df['age']>=35) & (df['age']<45),
+    (df['age']>=45) & (df['age']<55),
+    (df['age']>=55)
+]
+choices = ['18-24','25-34','35-44','45-54','55+']
+
+
+df['Age_Bracket'] = np.select(conditions,choices,default='0')
+```
+From predefined conditions we create column with certain age bracket assigned to the row
+
+
+### Checks for missing values and dubplicates
+```python
+#checking for missing values
+print(df.isna().sum())
+msno.matrix(df)
+plt.show()
+
+#Check for duplicates
+df = df.loc[~df.duplicated()].reset_index(drop=True).copy()
+df.loc[df.duplicated()]
+```
 
 
 
