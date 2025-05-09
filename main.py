@@ -57,7 +57,7 @@ df['month_of_year']=df['checkin_time'].dt.month_name()
 
 
 #Removing unnecessary columns
-df = df.drop(['user_id','gym_id','checkout_time','first_name','last_name','gender','birthdate','features','facilities','location'],axis=1)
+df = df.drop(['user_id','gym_id','checkout_time','first_name','last_name','birthdate','features','facilities','location'],axis=1)
 
 # print(df.dtypes)
 
@@ -84,10 +84,18 @@ new_cols = {'Basketball':'basketball_court',
 }
 df = df.rename(new_cols,axis=1)
 
-#checking for missing values
-print(df.isna().sum())
-msno.matrix(df)
-plt.show()
+# Normalize case (optional, ensures consistent counting)
+df["gender"] = df["gender"].str.lower()
+
+# Count occurrences
+totals = df["gender"].value_counts()
+
+# Group and sum
+df_gender = [totals.get("female", 0), totals.get("male", 0), totals.get("non-binary", 0)]
+# #checking for missing values
+# print(df.isna().sum())
+# msno.matrix(df)
+# plt.show()
 
 #Check for duplicates
 df = df.loc[~df.duplicated()].reset_index(drop=True).copy()
@@ -97,3 +105,8 @@ df.loc[df.duplicated()]
 print(df.shape)
 print(df.describe())
 df.head
+
+
+df_gender_labels=['Women','Men','Non-Binary']
+plt.pie(df_gender,labels=df_gender_labels,autopct='%.0f%%')
+plt.show()
