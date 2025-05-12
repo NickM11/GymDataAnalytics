@@ -120,7 +120,33 @@ plt.show()
 df = df.loc[~df.duplicated()].reset_index(drop=True).copy()
 df.loc[df.duplicated()]
 ```
+## Data analytics
 
+This part is were I try to analyze data from modified dataframe.
 
+### Gender gym visitation distribution
+
+There was need to return 'gender' column.
+Therefore we needed to clean some data before visualizing it.
+```python
+# Normalize case (optional, ensures consistent counting)
+df["gender"] = df["gender"].str.lower()
+
+# Count occurrences
+totals = df["gender"].value_counts().dropna()
+
+# Group and sum
+df_gender = [totals.get("female", 0), totals.get("male", 0), totals.get("non-binary", 0)]
+```
+Then visualized it via.
+```python
+df_gender_labels=['Women','Men','Non-Binary']
+plt.pie(df_gender,labels=df_gender_labels,autopct='%1.1f%%')
+plt.show()
+```
+![](Gender_gv.png)
+
+The pie graph shows nearly even distribution between Women and Men.
+The remaining part is Non-binary.
 
 

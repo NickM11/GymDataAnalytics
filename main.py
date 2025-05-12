@@ -4,6 +4,12 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import missingno as msno
 
+# Set options to display all rows and columns
+pd.set_option('display.max_rows', None)
+pd.set_option('display.max_columns', None)
+pd.set_option('display.width', None)  # Prevent line wrapping
+pd.set_option('display.max_colwidth', None)  # Show full column content
+
 df_checkin = pd.read_csv('checkin_checkout_history_updated.csv')
 df_gym = pd.read_csv('gym_locations_data.csv')
 df_sub = pd.read_csv('subscription_plans.csv')
@@ -88,10 +94,11 @@ df = df.rename(new_cols,axis=1)
 df["gender"] = df["gender"].str.lower()
 
 # Count occurrences
-totals = df["gender"].value_counts()
+totals = df["gender"].value_counts().dropna()
 
 # Group and sum
 df_gender = [totals.get("female", 0), totals.get("male", 0), totals.get("non-binary", 0)]
+
 # #checking for missing values
 # print(df.isna().sum())
 # msno.matrix(df)
@@ -104,9 +111,20 @@ df.loc[df.duplicated()]
 #cleaned data frame visualization
 print(df.shape)
 print(df.describe())
-df.head
+print(df.head())
 
 
 df_gender_labels=['Women','Men','Non-Binary']
-plt.pie(df_gender,labels=df_gender_labels,autopct='%.0f%%')
+plt.pie(df_gender,labels=df_gender_labels,autopct='%1.1f%%')
 plt.show()
+
+df_corrected=df[['calories_burned','age','price_per_month','hour_of_day','time_spent_min']].dropna().corr()
+sns.heatmap(df_corrected,annot=True)
+plt.show()
+
+# df_workout_type_cb=df.groupby(['workout_type','calories_burned'])
+# sns.histplot(df_workout_type_cb)
+# plt.show()
+
+# sns.lineplot(data=df,x='calories_burned',y='time_spent_min',hue='workout_type')
+# plt.show()
