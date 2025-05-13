@@ -149,4 +149,14 @@ plt.show()
 The pie graph shows nearly even distribution between Women and Men.
 The remaining part is Non-binary.
 
+### Data correlation
 
+I wanted to see if any of the data correlates with each other.
+
+![Data correlation heatmap](graph_heatmp.png)
+
+As heatmap shows there is no data relation between each other.
+
+# Conclusion
+In conclusion this dataset thought me better data cleaning techniques
+as well as basics of writing documentation and data visualization.
